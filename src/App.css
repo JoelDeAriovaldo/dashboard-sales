@@ -1,23 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Root and Layout Utilities */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col;
 }
 
+/* Logo Styling with Enhanced Tailwind and Animation */
 .logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  @apply h-24 p-6 transition-all duration-300 ease-in-out transform hover:scale-105;
+  will-change: filter, transform;
 }
 
+.logo:hover {
+  @apply drop-shadow-[0_0_2em_rgba(100,108,255,0.67)] dark:drop-shadow-[0_0_2em_rgba(100,108,255,0.4)];
+}
+
+.logo.react:hover {
+  @apply drop-shadow-[0_0_2em_rgba(97,218,251,0.67)] dark:drop-shadow-[0_0_2em_rgba(97,218,251,0.4)];
+}
+
+/* Responsive Keyframe Animations */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -33,10 +37,24 @@
   }
 }
 
+/* Card and Component Styling */
 .card {
-  padding: 2em;
+  @apply p-8 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 space-y-4;
 }
 
+/* Typography and Accessibility */
 .read-the-docs {
-  color: #888;
+  @apply text-gray-500 dark:text-gray-400 text-sm leading-relaxed;
+}
+
+/* Responsive Hover and Focus States */
+@layer utilities {
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  }
+}
+
+/* Dark Mode Transitions */
+body {
+  @apply transition-colors duration-300 ease-in-out;
 }

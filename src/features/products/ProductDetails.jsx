@@ -180,11 +180,6 @@ const ProductDetails = () => {
                   <h3 className="text-sm font-medium mb-2">Description</h3>
                   <p className="read-the-docs">{product.description}</p>
                 </div>
-
-                <Button className="w-full mt-6 btn-primary">
-                  <ShoppingCart className="mr-2" size={20} />
-                  Add to Cart
-                </Button>
               </div>
 
               {/* Sales Chart */}

@@ -5,12 +5,13 @@ import {
   ChevronDown,
   Edit,
   Trash2,
+  Eye,
   Search,
   ArrowLeft,
   ArrowRight,
 } from "lucide-react";
 
-const DataTable = ({ columns, data, onEdit, onDelete, pageSize = 10 }) => {
+const DataTable = ({ columns, data, actions, pageSize = 10 }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -108,29 +109,25 @@ const DataTable = ({ columns, data, onEdit, onDelete, pageSize = 10 }) => {
                     key={column.accessor}
                     className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-800 dark:text-gray-200"
                   >
-                    {row[column.accessor]}
+                    {column.render
+                      ? column.render(row[column.accessor])
+                      : row[column.accessor]}
                   </td>
                 ))}
                 <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-800 dark:text-gray-200">
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => onEdit(row)}
-                      className="p-2 hover:bg-blue-100 dark:hover:bg-blue-900 rounded-md transition-colors"
-                    >
-                      <Edit
-                        size={16}
-                        className="text-blue-600 dark:text-blue-400"
-                      />
-                    </button>
-                    <button
-                      onClick={() => onDelete(row.id)}
-                      className="p-2 hover:bg-red-100 dark:hover:bg-red-900 rounded-md transition-colors"
-                    >
-                      <Trash2
-                        size={16}
-                        className="text-red-600 dark:text-red-400"
-                      />
-                    </button>
+                    {actions.map((action, index) => (
+                      <button
+                        key={index}
+                        onClick={() => action.onClick(row)}
+                        className={`p-2 hover:bg-${action.color}-100 dark:hover:bg-${action.color}-900 rounded-md transition-colors`}
+                      >
+                        <action.icon
+                          size={16}
+                          className={`text-${action.color}-600 dark:text-${action.color}-400`}
+                        />
+                      </button>
+                    ))}
                   </div>
                 </td>
               </tr>
@@ -178,11 +175,17 @@ DataTable.propTypes = {
     PropTypes.shape({
       Header: PropTypes.string.isRequired,
       accessor: PropTypes.string.isRequired,
+      render: PropTypes.func,
     })
   ).isRequired,
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onEdit: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
+  actions: PropTypes.arrayOf(
+    PropTypes.shape({
+      icon: PropTypes.elementType.isRequired,
+      color: PropTypes.string.isRequired,
+      onClick: PropTypes.func.isRequired,
+    })
+  ).isRequired,
   pageSize: PropTypes.number,
 };
 

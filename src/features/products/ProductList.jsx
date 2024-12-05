@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { Plus, Edit, Trash2, Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import Button from "../../components/common/Button";
 import Modal from "../../components/common/Modal";
 import ProductForm from "./ProductForm";
@@ -8,9 +9,33 @@ import DataTable from "../../components/common/DataTable";
 import { toast } from "sonner";
 
 const ProductList = () => {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([
+    {
+      id: 1,
+      name: "Produto 1",
+      description: "Descrição do Produto 1",
+      price: "10.00",
+      stock: 100,
+      category: "Categoria 1",
+      sku: "SKU001",
+      images: [],
+      createdAt: new Date().toLocaleString(),
+    },
+    {
+      id: 2,
+      name: "Produto 2",
+      description: "Descrição do Produto 2",
+      price: "20.00",
+      stock: 50,
+      category: "Categoria 2",
+      sku: "SKU002",
+      images: [],
+      createdAt: new Date().toLocaleString(),
+    },
+  ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const navigate = useNavigate();
 
   const handleAddProduct = useCallback((newProduct) => {
     const productToAdd = {
@@ -46,11 +71,12 @@ const ProductList = () => {
     setIsModalOpen(true);
   }, []);
 
-  const openViewModal = useCallback((product) => {
-    // Lógica para abrir o modal de visualização do produto
-    setSelectedProduct(product);
-    setIsModalOpen(true);
-  }, []);
+  const openViewModal = useCallback(
+    (product) => {
+      navigate(`/products/${product.id}`);
+    },
+    [navigate]
+  );
 
   const columns = [
     {

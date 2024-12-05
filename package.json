@@ -10,6 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-hover-card": "^1.1.2",
+    "@radix-ui/react-tooltip": "^1.1.4",
     "chart.js": "^4.4.7",
     "framer-motion": "^11.13.1",
     "lucide-react": "^0.464.0",
@@ -17,6 +20,7 @@
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.0.2",
+    "react-tooltip": "^5.28.0",
     "sonner": "^1.7.0"
   },
   "devDependencies": {

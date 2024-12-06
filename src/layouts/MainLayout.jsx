@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
 import Sidebar from "../components/common/Sidebar";
+import Navbar from "../components/common/Navbar";
 
 const MainLayout = ({ children }) => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -11,17 +12,26 @@ const MainLayout = ({ children }) => {
 
   return (
     <div className="flex min-h-screen">
-      {/* Mobile Menu Toggle */}
-      <button
-        className="md:hidden absolute top-4 left-4 z-50"
-        onClick={toggleMobileSidebar}
-      >
-        {isMobileSidebarOpen ? <X /> : <Menu />}
-      </button>
-
       {/* Sidebar - Desktop */}
       <div className="hidden md:block w-64 shrink-0">
         <Sidebar />
+      </div>
+
+      {/* Main Content Area with Navbar */}
+      <div className="flex-1">
+        {/* Mobile Menu Toggle */}
+        <button
+          className="md:hidden fixed top-4 left-4 z-50 text-gray-600 dark:text-gray-300"
+          onClick={toggleMobileSidebar}
+        >
+          {isMobileSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        {/* Navbar */}
+        <Navbar />
+
+        {/* Main Content */}
+        <main className="pt-20 px-4 pb-4 md:pl-4">{children}</main>
       </div>
 
       {/* Mobile Sidebar Overlay */}
@@ -31,16 +41,13 @@ const MainLayout = ({ children }) => {
           onClick={() => setIsMobileSidebarOpen(false)}
         >
           <div
-            className="w-64 h-full bg-white"
+            className="w-64 h-full bg-white dark:bg-gray-800"
             onClick={(e) => e.stopPropagation()}
           >
             <Sidebar />
           </div>
         </div>
       )}
-
-      {/* Main Content Area */}
-      <main className="flex-1 p-4 md:ml-0">{children}</main>
     </div>
   );
 };

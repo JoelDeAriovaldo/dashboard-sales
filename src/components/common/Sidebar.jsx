@@ -25,6 +25,14 @@ const Sidebar = () => {
         <nav className="flex-1">
           <div className="space-y-2">
             <Link
+              to="/"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200"
+            >
+              <LayoutDashboard size={20} />
+              <span>Dashboard</span>
+            </Link>
+
+            <Link
               to="/sales"
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200"
             >

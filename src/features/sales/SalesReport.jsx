@@ -18,7 +18,28 @@ const SalesReport = () => {
     { Header: "ID", accessor: "id" },
     { Header: "Cliente", accessor: "customer" },
     { Header: "Produto", accessor: "product" },
-    { Header: "Valor", accessor: "amount" },
+    {
+      Header: "Valor",
+      accessor: "amount",
+      render: (amount) => `MZN ${Number(amount).toLocaleString()}`,
+    },
+    {
+      Header: "Tipo",
+      accessor: "saleType",
+      render: (type) => (type === "physical" ? "Loja Física" : "Loja Virtual"),
+    },
+    {
+      Header: "Pagamento",
+      accessor: "paymentMethod",
+      render: (method) =>
+        ({
+          cash: "Dinheiro",
+          credit_card: "Cartão de Crédito",
+          debit_card: "Cartão de Débito",
+          bank_transfer: "Transferência",
+          pix: "PIX",
+        }[method]),
+    },
     { Header: "Data", accessor: "date" },
     {
       Header: "Status",
@@ -44,11 +65,12 @@ const SalesReport = () => {
       id: "#001",
       customer: "João Silva",
       product: "Produto A",
-      amount: "MZN 1.200",
+      amount: 1200,
+      saleType: "physical",
+      paymentMethod: "credit_card",
       date: "2024-03-20",
       status: "Completo",
     },
-    // Adicione mais dados conforme necessário
   ];
 
   const actions = [

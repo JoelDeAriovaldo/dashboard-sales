@@ -8,6 +8,11 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
     amount: "",
     date: "",
     status: "Pendente",
+    saleType: "physical", // physical ou online
+    paymentMethod: "cash", // cash, credit_card, debit_card, bank_transfer, pix
+    invoiceType: "invoice", // invoice ou proforma
+    notes: "",
+    ...sale,
   });
 
   const [errors, setErrors] = useState({});
@@ -92,6 +97,69 @@ const SaleForm = ({ sale, onSubmit, onCancel }) => {
         {errors.date && (
           <span className="text-red-500 text-sm">{errors.date}</span>
         )}
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Tipo de Venda
+          </label>
+          <select
+            value={formData.saleType}
+            onChange={(e) =>
+              setFormData({ ...formData, saleType: e.target.value })
+            }
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="physical">Loja Física</option>
+            <option value="online">Loja Virtual</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Método de Pagamento
+          </label>
+          <select
+            value={formData.paymentMethod}
+            onChange={(e) =>
+              setFormData({ ...formData, paymentMethod: e.target.value })
+            }
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="cash">Dinheiro</option>
+            <option value="credit_card">Cartão de Crédito</option>
+            <option value="debit_card">Cartão de Débito</option>
+            <option value="bank_transfer">Transferência Bancária</option>
+            <option value="pix">PIX</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Tipo de Fatura
+          </label>
+          <select
+            value={formData.invoiceType}
+            onChange={(e) =>
+              setFormData({ ...formData, invoiceType: e.target.value })
+            }
+            className="w-full p-2 border rounded-md"
+          >
+            <option value="invoice">Fatura</option>
+            <option value="proforma">Proforma</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-1">Observações</label>
+        <textarea
+          value={formData.notes}
+          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+          className="w-full p-2 border rounded-md"
+          rows={3}
+        />
       </div>
 
       <div>

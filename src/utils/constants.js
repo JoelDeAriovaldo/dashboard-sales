@@ -1,19 +1,21 @@
 export const API_BASE_URL = 'https://api.example.com';
 
+// constants.js
 export const ROUTES = {
-    HOME: '/dashboard', // Alterado de '/' para '/dashboard'
-    DASHBOARD: '/dashboard', // Rota adicional para clareza
-    SALES: '/sales',
-    CRM: '/crm',
+    HOME: "/home",
+    DASHBOARD: "/dashboard",
+    SALES: "/sales",
+    SALES_REPORT: "/sales/report",
+    CRM: "/crm",
     PRODUCTS: {
-        LIST: '/products',
-        DETAILS: '/products/:id',
-        NEW: '/products/new',
-        EDIT: '/products/:id/edit',
-        CATEGORIES: '/products/categories',
-        INVENTORY: '/products/inventory'
+        LIST: "/products",
+        DETAILS: "/products/:id",
+        NEW: "/products/new",
+        EDIT: "/products/:id/edit",
+        CATEGORIES: "/products/categories",
+        INVENTORY: "/products/inventory"
     },
-    ORDERS: '/orders',
+    ORDERS: "/orders"
 };
 
 export const APP_SETTINGS = {

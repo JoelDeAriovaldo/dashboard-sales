@@ -3,15 +3,12 @@ import PropTypes from "prop-types";
 import {
   ChevronUp,
   ChevronDown,
-  Edit,
-  Trash2,
-  Eye,
   Search,
   ArrowLeft,
   ArrowRight,
 } from "lucide-react";
 
-const DataTable = ({ columns, data, actions, pageSize = 10 }) => {
+const DataTable = ({ columns, data, actions = [], pageSize = 10 }) => {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,12 +16,12 @@ const DataTable = ({ columns, data, actions, pageSize = 10 }) => {
   // Sorting logic
   const sortedData = React.useMemo(() => {
     if (!sortConfig.key) return data;
-
     return [...data].sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key])
-        return sortConfig.direction === "asc" ? -1 : 1;
-      if (a[sortConfig.key] > b[sortConfig.key])
-        return sortConfig.direction === "asc" ? 1 : -1;
+      const aValue = a[sortConfig.key];
+      const bValue = b[sortConfig.key];
+      if (!aValue || !bValue) return 0;
+      if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortConfig.direction === "asc" ? 1 : -1;
       return 0;
     });
   }, [data, sortConfig]);
@@ -32,11 +29,13 @@ const DataTable = ({ columns, data, actions, pageSize = 10 }) => {
   // Filtering logic
   const filteredData = React.useMemo(() => {
     return sortedData.filter((row) =>
-      columns.some((column) =>
-        String(row[column.accessor])
+      columns.some((column) => {
+        const value = row[column.accessor];
+        return value
+          ?.toString()
           .toLowerCase()
-          .includes(searchTerm.toLowerCase())
-      )
+          .includes(searchTerm.toLowerCase());
+      })
     );
   }, [sortedData, searchTerm, columns]);
 
@@ -57,6 +56,17 @@ const DataTable = ({ columns, data, actions, pageSize = 10 }) => {
     }));
   };
 
+  // Map de cores para classes Tailwind
+  const colorMap = {
+    blue: "blue",
+    red: "red",
+    yellow: "yellow",
+    green: "green",
+    purple: "purple",
+    pink: "pink",
+    indigo: "indigo",
+  };
+
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
       {/* Search Input */}
@@ -64,7 +74,7 @@ const DataTable = ({ columns, data, actions, pageSize = 10 }) => {
         <Search className="absolute left-3 text-gray-400" size={20} />
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Pesquisar..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full pl-10 pr-4 py-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
@@ -93,15 +103,17 @@ const DataTable = ({ columns, data, actions, pageSize = 10 }) => {
                   </div>
                 </th>
               ))}
-              <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-400">
-                Actions
-              </th>
+              {actions.length > 0 && (
+                <th className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-left text-sm font-semibold text-gray-600 dark:text-gray-400">
+                  Ações
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
-            {paginatedData.map((row) => (
+            {paginatedData.map((row, rowIndex) => (
               <tr
-                key={row.id}
+                key={row.id || rowIndex}
                 className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 {columns.map((column) => (
@@ -110,26 +122,28 @@ const DataTable = ({ columns, data, actions, pageSize = 10 }) => {
                     className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-800 dark:text-gray-200"
                   >
                     {column.render
-                      ? column.render(row[column.accessor])
+                      ? column.render(row[column.accessor], row)
                       : row[column.accessor]}
                   </td>
                 ))}
-                <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700 text-sm text-gray-800 dark:text-gray-200">
-                  <div className="flex gap-2">
-                    {actions.map((action, index) => (
-                      <button
-                        key={index}
-                        onClick={() => action.onClick(row)}
-                        className={`p-2 hover:bg-${action.color}-100 dark:hover:bg-${action.color}-900 rounded-md transition-colors`}
-                      >
-                        <action.icon
-                          size={16}
-                          className={`text-${action.color}-600 dark:text-${action.color}-400`}
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </td>
+                {actions.length > 0 && (
+                  <td className="py-3 px-4 border-b border-gray-200 dark:border-gray-700">
+                    <div className="flex gap-2">
+                      {actions.map((action, index) => {
+                        const colorClass = colorMap[action.color] || "gray";
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => action.onClick(row)}
+                            className={`p-2 rounded-md hover:bg-${colorClass}-100 dark:hover:bg-${colorClass}-900 text-${colorClass}-600 dark:text-${colorClass}-400`}
+                          >
+                            <action.icon size={16} />
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -140,9 +154,9 @@ const DataTable = ({ columns, data, actions, pageSize = 10 }) => {
       {filteredData.length > pageSize && (
         <div className="flex justify-between items-center mt-4">
           <span className="text-sm text-gray-600 dark:text-gray-400">
-            Showing {(currentPage - 1) * pageSize + 1} to{" "}
-            {Math.min(currentPage * pageSize, filteredData.length)} of{" "}
-            {filteredData.length} entries
+            Mostrando {(currentPage - 1) * pageSize + 1} até{" "}
+            {Math.min(currentPage * pageSize, filteredData.length)} de{" "}
+            {filteredData.length} registros
           </span>
           <div className="flex gap-2">
             <button
@@ -185,7 +199,7 @@ DataTable.propTypes = {
       color: PropTypes.string.isRequired,
       onClick: PropTypes.func.isRequired,
     })
-  ).isRequired,
+  ),
   pageSize: PropTypes.number,
 };
 

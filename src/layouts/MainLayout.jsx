@@ -13,7 +13,7 @@ const MainLayout = ({ children }) => {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar - Desktop */}
-      <div className="hidden md:block w-64 shrink-0">
+      <div className="hidden md:block w-8 shrink-0">
         <Sidebar />
       </div>
 
@@ -31,7 +31,9 @@ const MainLayout = ({ children }) => {
         <Navbar />
 
         {/* Main Content */}
-        <main className="pt-20 px-4 pb-4 md:pl-4">{children}</main>
+        <main className="pt-20 px-6 pb-6 md:pl-6 md:pr-8 md:pb-8">
+          {children}
+        </main>
       </div>
 
       {/* Mobile Sidebar Overlay */}

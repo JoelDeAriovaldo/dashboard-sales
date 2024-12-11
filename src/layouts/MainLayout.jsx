@@ -13,7 +13,7 @@ const MainLayout = ({ children }) => {
   return (
     <div className="flex min-h-screen">
       {/* Sidebar - Desktop */}
-      <div className="hidden md:block w-8 shrink-0">
+      <div className="hidden md:block w-64 shrink-0">
         <Sidebar />
       </div>
 

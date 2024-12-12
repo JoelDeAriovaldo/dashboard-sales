@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -6,19 +6,27 @@ import {
   Users,
   Package,
   ShoppingCart,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ({ isExpanded, toggleSidebar }) => {
   return (
-    <aside className="bg-gray-800 h-screen w-64 fixed left-0 top-0 text-white p-4">
+    <aside
+      className={`bg-gray-800 h-screen fixed left-0 top-0 text-white p-4 transition-all duration-300 ${
+        isExpanded ? "w-64" : "w-20"
+      }`}
+    >
       <div className="flex flex-col h-full">
         {/* Logo */}
         <Link
           to="/"
-          className="flex items-center gap-2 text-xl font-bold mb-8 px-4"
+          className={`flex items-center gap-2 text-xl font-bold mb-8 px-4 ${
+            isExpanded ? "justify-start" : "justify-center"
+          }`}
         >
           <LayoutDashboard size={24} />
-          <span>Dashboard</span>
+          {isExpanded && <span>Dashboard</span>}
         </Link>
 
         {/* Links de navegação */}
@@ -29,7 +37,7 @@ const Sidebar = () => {
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200"
             >
               <LayoutDashboard size={20} />
-              <span>Dashboard</span>
+              {isExpanded && <span>Dashboard</span>}
             </Link>
 
             <Link
@@ -37,7 +45,7 @@ const Sidebar = () => {
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200"
             >
               <LineChart size={20} />
-              <span>Sales</span>
+              {isExpanded && <span>Sales</span>}
             </Link>
 
             <Link
@@ -45,7 +53,7 @@ const Sidebar = () => {
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200"
             >
               <Users size={20} />
-              <span>CRM</span>
+              {isExpanded && <span>CRM</span>}
             </Link>
 
             <Link
@@ -53,7 +61,7 @@ const Sidebar = () => {
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200"
             >
               <Package size={20} />
-              <span>Products</span>
+              {isExpanded && <span>Products</span>}
             </Link>
 
             <Link
@@ -61,15 +69,18 @@ const Sidebar = () => {
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200"
             >
               <ShoppingCart size={20} />
-              <span>Orders</span>
+              {isExpanded && <span>Orders</span>}
             </Link>
           </div>
         </nav>
 
-        {/* Footer */}
-        <div className="mt-auto px-4 py-4 text-sm text-gray-400">
-          <p>&copy; 2024 Dashboard</p>
-        </div>
+        {/* Botão de Expandir/Colapsar */}
+        <button
+          className="mt-auto px-4 py-4 text-sm text-gray-400 flex items-center justify-center"
+          onClick={toggleSidebar}
+        >
+          {isExpanded ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+        </button>
       </div>
     </aside>
   );

@@ -5,16 +5,25 @@ import Navbar from "../components/common/Navbar";
 
 const MainLayout = ({ children }) => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
 
   const toggleMobileSidebar = () => {
     setIsMobileSidebarOpen(!isMobileSidebarOpen);
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarExpanded(!isSidebarExpanded);
+  };
+
   return (
     <div className="flex min-h-screen">
       {/* Sidebar - Desktop */}
-      <div className="hidden md:block w-64 shrink-0">
-        <Sidebar />
+      <div
+        className={`hidden md:block ${
+          isSidebarExpanded ? "w-64" : "w-20"
+        } shrink-0`}
+      >
+        <Sidebar isExpanded={isSidebarExpanded} toggleSidebar={toggleSidebar} />
       </div>
 
       {/* Main Content Area with Navbar */}
@@ -46,7 +55,7 @@ const MainLayout = ({ children }) => {
             className="w-64 h-full bg-white dark:bg-gray-800"
             onClick={(e) => e.stopPropagation()}
           >
-            <Sidebar />
+            <Sidebar isExpanded={true} toggleSidebar={toggleSidebar} />
           </div>
         </div>
       )}

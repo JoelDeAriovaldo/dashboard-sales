@@ -40,7 +40,7 @@ const MainLayout = ({ children }) => {
         <Navbar />
 
         {/* Main Content */}
-        <main className="pt-20 px-6 pb-6 md:pl-6 md:pr-8 md:pb-8">
+        <main className="pt-20 px-2 pb-3 md:pl-2 md:pr-4 md:pb-8">
           {children}
         </main>
       </div>

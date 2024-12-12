@@ -257,56 +257,56 @@ const Dashboard = () => {
 
   return (
     <MainLayout>
-      {/* Cards de Métricas - Agora em duas linhas */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <Card variant="elevated" className="p-3">
+      {/* Metrics Cards - Improved Responsiveness */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-5">
+        <Card variant="elevated" className="p-2 sm:p-3">
           <StatCard
             title="Vendas de Hoje"
             value="MZN 24.532"
-            icon={<DollarSign className="text-green-500" size={20} />}
+            icon={<DollarSign className="text-green-500" size={18} />}
             trend="+12%"
             description="vs. ontem"
           />
         </Card>
 
-        <Card variant="elevated" className="p-3">
+        <Card variant="elevated" className="p-2 sm:p-3">
           <StatCard
             title="Produtos em Estoque"
             value="1.234"
-            icon={<Package className="text-blue-500" size={20} />}
+            icon={<Package className="text-blue-500" size={18} />}
             trend="-5"
             description="produtos baixo estoque"
             trendColor="text-red-500"
           />
         </Card>
 
-        <Card variant="elevated" className="p-3">
+        <Card variant="elevated" className="p-2 sm:p-3">
           <StatCard
             title="Pedidos Ativos"
             value="64"
-            icon={<Clock className="text-purple-500" size={20} />}
+            icon={<Clock className="text-purple-500" size={18} />}
             trend="23"
             description="em preparação"
           />
         </Card>
 
-        <Card variant="elevated" className="p-3">
+        <Card variant="elevated" className="p-2 sm:p-3">
           <StatCard
             title="Usuários Ativos"
             value="892"
-            icon={<Users className="text-orange-500" size={20} />}
+            icon={<Users className="text-orange-500" size={18} />}
             trend="+15%"
             description="últimas 24h"
           />
         </Card>
       </div>
 
-      {/* Gráficos em um layout mais compacto */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+      {/* Charts - More Responsive Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-5">
         <Card
           title="Vendas Mensais"
           variant="elevated"
-          className="lg:col-span-2 h-96"
+          className="lg:col-span-2 h-72 md:h-80"
         >
           <LineChart
             data={salesData}
@@ -322,7 +322,11 @@ const Dashboard = () => {
           />
         </Card>
 
-        <Card title="Vendas por Categoria" variant="elevated" className="h-96">
+        <Card
+          title="Vendas por Categoria"
+          variant="elevated"
+          className="h-72 md:h-80"
+        >
           <PieChart
             data={categoryData}
             options={{
@@ -340,7 +344,7 @@ const Dashboard = () => {
         <Card
           title="Níveis de Estoque"
           variant="elevated"
-          className="lg:col-span-3 h-80"
+          className="lg:col-span-3 h-56 md:h-64"
         >
           <BarChart
             data={stockData}
@@ -372,9 +376,13 @@ const Dashboard = () => {
         </Card>
       </div>
 
-      {/* Tabelas em uma única linha */}
+      {/* Tables - Improved Responsiveness */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <Card title="Produtos Mais Vendidos" variant="elevated">
+        <Card
+          title="Produtos Mais Vendidos"
+          variant="elevated"
+          className="overflow-x-auto"
+        >
           <DataTable
             columns={productColumns}
             data={topProducts}
@@ -383,7 +391,11 @@ const Dashboard = () => {
           />
         </Card>
 
-        <Card title="Top Fornecedores" variant="elevated">
+        <Card
+          title="Top Fornecedores"
+          variant="elevated"
+          className="overflow-x-auto"
+        >
           <DataTable
             columns={supplierColumns}
             data={topSuppliers}
@@ -412,7 +424,7 @@ const Dashboard = () => {
   );
 };
 
-// Componente StatCard mantido igual ao original
+// StatCard remains the same as in the original file
 const StatCard = ({
   title,
   value,
@@ -425,16 +437,20 @@ const StatCard = ({
     <div className="flex flex-col h-full">
       <div className="flex justify-between items-start mb-2">
         <div>
-          <p className="text-gray-600 dark:text-gray-400 text-xs">{title}</p>
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white mt-1">
+          <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm">
+            {title}
+          </p>
+          <h3 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white mt-1">
             {value}
           </h3>
         </div>
         {icon}
       </div>
       <div className="mt-auto">
-        <span className={`${trendColor} text-xs font-semibold`}>{trend}</span>
-        <span className="text-gray-600 dark:text-gray-400 text-xs ml-1">
+        <span className={`${trendColor} text-xs sm:text-sm font-semibold`}>
+          {trend}
+        </span>
+        <span className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm ml-1">
           {description}
         </span>
       </div>

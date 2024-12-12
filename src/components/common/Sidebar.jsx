@@ -47,14 +47,14 @@ const Sidebar = ({ isExpanded, toggleSidebar }) => {
               <LineChart size={20} />
               {isExpanded && <span>Sales</span>}
             </Link>
-
+            {/* 
             <Link
               to="/crm"
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200"
             >
               <Users size={20} />
               {isExpanded && <span>CRM</span>}
-            </Link>
+            </Link> */}
 
             <Link
               to="/products"
@@ -64,13 +64,13 @@ const Sidebar = ({ isExpanded, toggleSidebar }) => {
               {isExpanded && <span>Products</span>}
             </Link>
 
-            <Link
+            {/* <Link
               to="/orders"
               className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-700 transition-colors duration-200"
             >
               <ShoppingCart size={20} />
               {isExpanded && <span>Orders</span>}
-            </Link>
+            </Link> */}
           </div>
         </nav>
 

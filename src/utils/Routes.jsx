@@ -8,6 +8,8 @@ import SalesReport from "../features/sales/SalesReport";
 import ProductList from "../features/products/ProductList";
 import ProductDetails from "../features/products/ProductDetails";
 import ProductForm from "../features/products/ProductForm";
+import SaleDetails from "../features/sales/SaleDetails";
+import SalesPage from "../pages/SalesPage";
 
 const AppRoutes = () => {
   return (
@@ -16,13 +18,14 @@ const AppRoutes = () => {
       <Route path="/" element={<Dashboard />} />
       <Route path={ROUTES.HOME} element={<Dashboard />} />
       <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-
       {/* Rotas de vendas */}
-      <Route path={ROUTES.SALES} element={<SalesDashboard />} />
-      <Route path={ROUTES.SALES + "/report"} element={<SalesReport />} />
-
+      {/* Rotas de vendas */}
+      <Route path={ROUTES.SALES.LIST} element={<SalesDashboard />} />
+      <Route path={ROUTES.SALES.REPORT} element={<SalesReport />} />
+      <Route path={ROUTES.SALES.POS} element={<SalesPage />} />{" "}
+      {/* Nova rota */}
+      <Route path={ROUTES.SALES.DETAILS} element={<SaleDetails />} />
       <Route path={ROUTES.CRM} element={<div>CRM Dashboard</div>} />
-
       {/* Rotas de produtos */}
       <Route path={ROUTES.PRODUCTS.LIST} element={<ProductList />} />
       <Route path={ROUTES.PRODUCTS.DETAILS} element={<ProductDetails />} />
@@ -36,7 +39,6 @@ const AppRoutes = () => {
         path={ROUTES.PRODUCTS.INVENTORY}
         element={<div>Inventory Management</div>}
       />
-
       <Route path={ROUTES.ORDERS} element={<div>Orders Dashboard</div>} />
     </Routes>
   );

@@ -4,8 +4,12 @@ export const API_BASE_URL = 'https://api.example.com';
 export const ROUTES = {
     HOME: "/home",
     DASHBOARD: "/dashboard",
-    SALES: "/sales",
-    SALES_REPORT: "/sales/report",
+    SALES: {
+        LIST: "/sales",
+        REPORT: "/sales/report",
+        POS: "/sales/pos", // Nova rota para página de vendas
+        DETAILS: "/sales/:id"
+    },
     CRM: "/crm",
     PRODUCTS: {
         LIST: "/products",

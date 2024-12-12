@@ -8,6 +8,8 @@ import SaleDetails from "./SaleDetails";
 
 const SalesReport = () => {
   const [selectedPeriod, setSelectedPeriod] = useState("today");
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+  const [selectedSale, setSelectedSale] = useState(null);
 
   const handleViewDetails = (sale) => {
     setSelectedSale(sale);

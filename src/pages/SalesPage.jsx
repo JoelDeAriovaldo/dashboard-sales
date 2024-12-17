@@ -109,28 +109,11 @@ const SalesPage = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="w-48 bg-white dark:bg-gray-800 shadow-md p-4 space-y-2">
-        <h3 className="font-bold text-lg mb-4">Categorias</h3>
-        {categories.map((category) => (
-          <button
-            key={category}
-            onClick={() => setActiveCategory(category)}
-            className={`w-full text-left p-2 rounded transition-colors ${
-              activeCategory === category
-                ? "bg-blue-500 text-white"
-                : "hover:bg-gray-100 dark:hover:bg-gray-700"
-            }`}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
-
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-900 w-full">
       <div className="flex-1 flex flex-col">
         <div className="p-6 flex-1">
           <div className="mb-6 flex items-center space-x-4">
-            <div className="relative flex-1">
+            <div className="relative flex-1 max-w-md">
               <Search
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                 size={20}
@@ -149,9 +132,27 @@ const SalesPage = () => {
             </div>
           </div>
 
+          <div className="mb-4">
+            <div className="flex space-x-2 overflow-x-auto pb-2">
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() => setActiveCategory(category)}
+                  className={`px-4 py-2 rounded transition-colors text-sm ${
+                    activeCategory === category
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-100 dark:bg-gray-700 hover:bg-gray-200"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <motion.div
             layout
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
           >
             <AnimatePresence>
               {filteredProducts.map((product) => (

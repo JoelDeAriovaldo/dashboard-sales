@@ -1,4 +1,3 @@
-// Routes.jsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { ROUTES } from "./constants";
@@ -10,23 +9,21 @@ import ProductDetails from "../features/products/ProductDetails";
 import ProductForm from "../features/products/ProductForm";
 import SaleDetails from "../features/sales/SaleDetails";
 import SalesPage from "../pages/SalesPage";
+import CustomerList from "../features/crm/CustomerList";
+import CustomerProfile from "../features/crm/CustomerProfile";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Rotas principais */}
       <Route path="/" element={<Dashboard />} />
       <Route path={ROUTES.HOME} element={<Dashboard />} />
       <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
-      {/* Rotas de vendas */}
-      {/* Rotas de vendas */}
       <Route path={ROUTES.SALES.LIST} element={<SalesDashboard />} />
       <Route path={ROUTES.SALES.REPORT} element={<SalesReport />} />
-      <Route path={ROUTES.SALES.POS} element={<SalesPage />} />{" "}
-      {/* Nova rota */}
+      <Route path={ROUTES.SALES.POS} element={<SalesPage />} />
       <Route path={ROUTES.SALES.DETAILS} element={<SaleDetails />} />
-      <Route path={ROUTES.CRM} element={<div>CRM Dashboard</div>} />
-      {/* Rotas de produtos */}
+      <Route path={ROUTES.CRM.LIST} element={<CustomerList />} />
+      <Route path={ROUTES.CRM.DETAILS} element={<CustomerProfile />} />
       <Route path={ROUTES.PRODUCTS.LIST} element={<ProductList />} />
       <Route path={ROUTES.PRODUCTS.DETAILS} element={<ProductDetails />} />
       <Route path={ROUTES.PRODUCTS.NEW} element={<ProductForm />} />

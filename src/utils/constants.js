@@ -1,16 +1,18 @@
 export const API_BASE_URL = 'https://api.example.com';
 
-// constants.js
 export const ROUTES = {
     HOME: "/home",
     DASHBOARD: "/dashboard",
     SALES: {
         LIST: "/sales",
         REPORT: "/sales/report",
-        POS: "/sales/pos", // Nova rota para página de vendas
+        POS: "/sales/pos",
         DETAILS: "/sales/:id"
     },
-    CRM: "/crm",
+    CRM: {
+        LIST: "/crm/customers",
+        DETAILS: "/crm/customers/:id"
+    },
     PRODUCTS: {
         LIST: "/products",
         DETAILS: "/products/:id",

@@ -1,34 +1,24 @@
-export const fetchData = async (url, options = {}) => {
-    try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error('Fetch error:', error);
-        throw error;
-    }
-};
+import axios from 'axios';
 
-export const postData = async (url, data, options = {}) => {
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-            ...options,
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const result = await response.json();
-        return result;
-    } catch (error) {
-        console.error('Post error:', error);
-        throw error;
+const api = axios.create({
+    baseURL: 'https://backend-sales-dlt4.onrender.com/api',
+    timeout: 5000,
+    headers: {
+        'Content-Type': 'application/json',
     }
-};
+});
+
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+export default api;

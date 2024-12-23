@@ -9,8 +9,13 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { ROUTES } from "../../utils/constants";
 
 const Sidebar = ({ isExpanded, toggleSidebar }) => {
+  // Não renderizar a sidebar na página de login
+  if (location.pathname === ROUTES.LOGIN) {
+    return null;
+  }
   return (
     <aside
       className={`bg-gray-800 h-screen fixed left-0 top-0 text-white p-4 transition-all duration-300 ${

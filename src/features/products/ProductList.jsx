@@ -7,64 +7,47 @@ import ProductForm from "./ProductForm";
 import MainLayout from "../../layouts/MainLayout";
 import DataTable from "../../components/common/DataTable";
 import { toast } from "sonner";
+import { useProducts } from "../../hooks/useProducts";
+import { productService } from "../../services/products";
+import Loader from "../../components/common/Loader";
 
 const ProductList = () => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Produto 1",
-      description: "Descrição do Produto 1",
-      price: "10.00",
-      stock: 100,
-      category: "Categoria 1",
-      sku: "SKU001",
-      images: [],
-      createdAt: new Date().toLocaleString(),
-    },
-    {
-      id: 2,
-      name: "Produto 2",
-      description: "Descrição do Produto 2",
-      price: "20.00",
-      stock: 50,
-      category: "Categoria 2",
-      sku: "SKU002",
-      images: [],
-      createdAt: new Date().toLocaleString(),
-    },
-  ]);
+  const { products, loading, error, refetchProducts } = useProducts();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const navigate = useNavigate();
 
-  const handleAddProduct = useCallback((newProduct) => {
-    const productToAdd = {
-      ...newProduct,
-      id: Date.now(),
-      createdAt: new Date().toLocaleString(),
-    };
+  const handleAddProduct = async (newProduct) => {
+    try {
+      await productService.create(newProduct);
+      refetchProducts();
+      setIsModalOpen(false);
+      toast.success("Produto adicionado com sucesso");
+    } catch (error) {
+      toast.error("Erro ao adicionar produto");
+    }
+  };
 
-    setProducts((prevProducts) => [...prevProducts, productToAdd]);
-    setIsModalOpen(false);
-    toast.success("Product added successfully");
-  }, []);
+  const handleUpdateProduct = async (updatedProduct) => {
+    try {
+      await productService.update(updatedProduct.id, updatedProduct);
+      refetchProducts();
+      setIsModalOpen(false);
+      toast.success("Produto atualizado com sucesso");
+    } catch (error) {
+      toast.error("Erro ao atualizar produto");
+    }
+  };
 
-  const handleUpdateProduct = useCallback((updatedProduct) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((p) =>
-        p.id === updatedProduct.id ? { ...updatedProduct } : p
-      )
-    );
-    setIsModalOpen(false);
-    toast.success("Product updated successfully");
-  }, []);
-
-  const handleDeleteProduct = useCallback((productId) => {
-    setProducts((prevProducts) =>
-      prevProducts.filter((p) => p.id !== productId)
-    );
-    toast.success("Product deleted successfully");
-  }, []);
+  const handleDeleteProduct = async (productId) => {
+    try {
+      await productService.delete(productId);
+      refetchProducts();
+      toast.success("Produto excluído com sucesso");
+    } catch (error) {
+      toast.error("Erro ao excluir produto");
+    }
+  };
 
   const openEditModal = useCallback((product) => {
     setSelectedProduct(product);
@@ -141,16 +124,24 @@ const ProductList = () => {
           </Button>
         </div>
 
-        <DataTable
-          columns={columns}
-          data={products}
-          actions={actions}
-          emptyState={{
-            title: "No Products",
-            description: "Add your first product to get started",
-            icon: <Plus className="text-gray-400" size={48} />,
-          }}
-        />
+        {loading ? (
+          <div className="flex justify-center items-center h-64">
+            <Loader />
+          </div>
+        ) : error ? (
+          <div className="text-center text-red-500">{error}</div>
+        ) : (
+          <DataTable
+            columns={columns}
+            data={products}
+            actions={actions}
+            emptyState={{
+              title: "Nenhum Produto",
+              description: "Adicione seu primeiro produto para começar",
+              icon: <Plus className="text-gray-400" size={48} />,
+            }}
+          />
+        )}
 
         <Modal
           isOpen={isModalOpen}

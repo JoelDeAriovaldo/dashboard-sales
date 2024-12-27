@@ -30,6 +30,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
   useEffect(() => {
     if (initialData) {
       setFormData({
+        id: initialData.id,
         name: initialData.name || "",
         brand: initialData.brand || "",
         category: initialData.category || "",
@@ -83,28 +84,41 @@ const ProductForm = ({ onSubmit, initialData }) => {
       initialStock: parseInt(formData.initialStock),
       minStock: parseInt(formData.minStock),
       weight: parseFloat(formData.weight),
-      images: imagePreviews,
+      images: formData.images,
     };
 
     onSubmit(processedData);
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
-
-    // Limit to 5 images
     if (imagePreviews.length + files.length > 5) {
-      alert("You can only upload up to 5 images");
+      alert("Máximo de 5 imagens");
       return;
     }
 
-    const newPreviews = files.map((file) => URL.createObjectURL(file));
+    const promises = files.map(async (file) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () =>
+          resolve({ name: file.name, base64: reader.result });
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+      });
+    });
 
-    setImagePreviews((prev) => [...prev, ...newPreviews]);
-    setFormData((prev) => ({
-      ...prev,
-      images: [...(prev.images || []), ...files],
-    }));
+    try {
+      const results = await Promise.all(promises);
+      const newPreviews = results.map((result) => result.base64);
+
+      setImagePreviews((prev) => [...prev, ...newPreviews]);
+      setFormData((prev) => ({
+        ...prev,
+        images: [...prev.images, ...results], // Salva base64
+      }));
+    } catch (error) {
+      console.error("Falha ao converter imagem", error);
+    }
   };
 
   const removeImage = (indexToRemove) => {
@@ -180,7 +194,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
 
           <div>
             <label className="block text-sm font-medium mb-1">Marca</label>
-            <input
+            <Input
               type="text"
               name="brand"
               value={formData.brand}
@@ -193,7 +207,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
 
           <div>
             <label className="block text-sm font-medium mb-1">Categoria</label>
-            <input
+            <Input
               type="text"
               name="category"
               value={formData.category}
@@ -248,7 +262,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
             <label className="block text-sm font-medium mb-1">
               Estoque Inicial
             </label>
-            <input
+            <Input
               type="number"
               name="initialStock"
               value={formData.initialStock}
@@ -264,7 +278,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
             <label className="block text-sm font-medium mb-1">
               Estoque Mínimo
             </label>
-            <input
+            <Input
               type="number"
               name="minStock"
               value={formData.minStock}
@@ -284,7 +298,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Modelo</label>
-            <input
+            <Input
               type="text"
               name="model"
               value={formData.model}
@@ -297,7 +311,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
 
           <div>
             <label className="block text-sm font-medium mb-1">Cor</label>
-            <input
+            <Input
               type="text"
               name="color"
               value={formData.color}
@@ -312,7 +326,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
             <label className="block text-sm font-medium mb-1">
               Código de Barras
             </label>
-            <input
+            <Input
               type="text"
               name="barcode"
               value={formData.barcode}
@@ -327,7 +341,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
             <label className="block text-sm font-medium mb-1">
               Dimensões (LxAxP)
             </label>
-            <input
+            <Input
               type="text"
               name="size"
               value={formData.size}
@@ -341,7 +355,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
 
           <div>
             <label className="block text-sm font-medium mb-1">Peso</label>
-            <input
+            <Input
               type="text"
               name="weight"
               value={formData.weight}
@@ -362,7 +376,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
             <label className="block text-sm font-medium mb-1">
               Data de Fabricação
             </label>
-            <input
+            <Input
               type="date"
               name="manufactureDate"
               value={formData.manufactureDate}
@@ -377,7 +391,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
             <label className="block text-sm font-medium mb-1">
               Data de Validade
             </label>
-            <input
+            <Input
               type="date"
               name="expiryDate"
               value={formData.expiryDate}

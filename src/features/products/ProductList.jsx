@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useProducts } from "../../hooks/useProducts";
 import { productService } from "../../services/products";
 import Loader from "../../components/common/Loader";
+import { span } from "framer-motion/client";
 
 const ProductList = () => {
   const { products, loading, error, refetchProducts } = useProducts();
@@ -62,6 +63,21 @@ const ProductList = () => {
   );
 
   const columns = [
+    {
+      Header: "Foto",
+      accessor: "images",
+      sortable: false,
+      render: (_, { images, name }) => {
+        const imageUrl = images?.[0]?.image_url;
+        return (
+          <img
+            src={imageUrl || "https://via.placeholder.com/48?text=Foto"}
+            alt={name || "Sem imagem"}
+            className="w-12 h-12 object-cover rounded-md"
+          />
+        );
+      },
+    },
     {
       Header: "Nome",
       accessor: "name",

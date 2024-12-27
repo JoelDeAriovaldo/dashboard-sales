@@ -9,10 +9,13 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+import { useLocation } from "react-router-dom";
 import { ROUTES } from "../../utils/constants";
 
 const Sidebar = ({ isExpanded, toggleSidebar }) => {
   // Não renderizar a sidebar na página de login
+  const location = useLocation();
+
   if (location.pathname === ROUTES.LOGIN) {
     return null;
   }

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { X, Upload } from "lucide-react";
 import Button from "../../components/common/Button";
-import Input from "../../components/common/Input";
+import { Input, CurrencyInput } from "../../components/common/Input";
 
 const ProductForm = ({ onSubmit, initialData }) => {
   const [formData, setFormData] = useState({

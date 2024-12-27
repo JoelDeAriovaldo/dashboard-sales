@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { X, Upload } from "lucide-react";
 import Button from "../../components/common/Button";
@@ -23,36 +23,6 @@ const ProductForm = ({ onSubmit, initialData }) => {
     description: "",
     images: [],
   });
-
-  ProductForm.propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    initialData: PropTypes.shape({
-      name: PropTypes.string,
-      brand: PropTypes.string,
-      category: PropTypes.string,
-      purchase_price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      sale_price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      initial_stock: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      min_stock: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      model: PropTypes.string,
-      color: PropTypes.string,
-      barcode: PropTypes.string,
-      dimensions: PropTypes.string,
-      weight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-      manufacture_date: PropTypes.string,
-      expiry_date: PropTypes.string,
-      description: PropTypes.string,
-      images: PropTypes.arrayOf(
-        PropTypes.shape({
-          image_url: PropTypes.string,
-        })
-      ),
-    }),
-  };
-
-  ProductForm.defaultProps = {
-    initialData: null,
-  };
 
   const [errors, setErrors] = useState({});
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -441,6 +411,36 @@ const ProductForm = ({ onSubmit, initialData }) => {
       </div>
     </form>
   );
+};
+
+ProductForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  initialData: PropTypes.shape({
+    name: PropTypes.string,
+    brand: PropTypes.string,
+    category: PropTypes.string,
+    purchase_price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    sale_price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    initial_stock: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    min_stock: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    model: PropTypes.string,
+    color: PropTypes.string,
+    barcode: PropTypes.string,
+    dimensions: PropTypes.string,
+    weight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    manufacture_date: PropTypes.string,
+    expiry_date: PropTypes.string,
+    description: PropTypes.string,
+    images: PropTypes.arrayOf(
+      PropTypes.shape({
+        image_url: PropTypes.string,
+      })
+    ),
+  }),
+};
+
+ProductForm.defaultProps = {
+  initialData: null,
 };
 
 export default ProductForm;

@@ -63,26 +63,58 @@ const ProductList = () => {
 
   const columns = [
     {
-      Header: "Name",
+      Header: "Nome",
       accessor: "name",
       sortable: true,
     },
     {
-      Header: "Stock",
-      accessor: "stock",
+      Header: "Marca",
+      accessor: "brand",
       sortable: true,
-      render: (value) =>
-        value > 0 ? value : <span className="text-red-500">{value}</span>,
     },
     {
-      Header: "Price",
-      accessor: "price",
+      Header: "Categoria",
+      accessor: "category",
+      sortable: true,
+    },
+    {
+      Header: "Estoque",
+      accessor: "initial_stock",
+      sortable: true,
+      render: (value, row) => {
+        const isLowStock = value <= row.min_stock;
+        return (
+          <span className={isLowStock ? "text-red-500" : "text-gray-900"}>
+            {value}
+          </span>
+        );
+      },
+    },
+    {
+      Header: "Preço Compra",
+      accessor: "purchase_price",
       sortable: true,
       render: (value) => `R$ ${parseFloat(value).toFixed(2)}`,
     },
     {
-      Header: "Created At",
-      accessor: "createdAt",
+      Header: "Preço Venda",
+      accessor: "sale_price",
+      sortable: true,
+      render: (value) => `R$ ${parseFloat(value).toFixed(2)}`,
+    },
+    {
+      Header: "Código de Barras",
+      accessor: "barcode",
+      sortable: true,
+    },
+    {
+      Header: "Modelo",
+      accessor: "model",
+      sortable: true,
+    },
+    {
+      Header: "Data de Cadastro",
+      accessor: "created_at",
       sortable: true,
       render: (value) => new Date(value).toLocaleDateString(),
     },
@@ -135,6 +167,46 @@ const ProductList = () => {
             columns={columns}
             data={products}
             actions={actions}
+            rowExpansion={{
+              render: (row) => (
+                <div className="p-4 bg-gray-50">
+                  <div className="flex gap-4 mb-4">
+                    {row.images?.map((img, idx) => (
+                      <img
+                        key={idx}
+                        src={img.image_url}
+                        alt={`${row.name} ${idx + 1}`}
+                        className="w-20 h-20 object-cover rounded-md"
+                      />
+                    ))}
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                      <span className="font-semibold">Dimensões:</span>{" "}
+                      {row.dimensions}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Peso:</span> {row.weight}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Data Fabricação:</span>{" "}
+                      {row.manufacture_date &&
+                        new Date(row.manufacture_date).toLocaleDateString()}
+                    </div>
+                    <div>
+                      <span className="font-semibold">Data Validade:</span>{" "}
+                      {row.expiry_date &&
+                        new Date(row.expiry_date).toLocaleDateString()}
+                    </div>
+                    <div className="col-span-2 md:col-span-4">
+                      <span className="font-semibold">Descrição:</span>{" "}
+                      {row.description}
+                    </div>
+                  </div>
+                </div>
+              ),
+              expandOnClick: true,
+            }}
             emptyState={{
               title: "Nenhum Produto",
               description: "Adicione seu primeiro produto para começar",

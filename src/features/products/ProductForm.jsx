@@ -9,34 +9,75 @@ const ProductForm = ({ onSubmit, initialData }) => {
     category: "",
     purchasePrice: "",
     salePrice: "",
-    color: "",
+    initialStock: "0",
+    minStock: "0",
     model: "",
+    color: "",
     barcode: "",
-    initialStock: "",
-    size: "",
-    minStock: "",
-    weight: "",
+    dimensions: "",
+    weight: "0",
     manufactureDate: "",
     expiryDate: "",
     description: "",
     images: [],
   });
 
+  const [errors, setErrors] = useState({});
   const [imagePreviews, setImagePreviews] = useState([]);
 
   useEffect(() => {
     if (initialData) {
-      setFormData(initialData);
-      setImagePreviews(initialData.images || []);
+      setFormData({
+        name: initialData.name || "",
+        brand: initialData.brand || "",
+        category: initialData.category || "",
+        purchasePrice: initialData.purchase_price?.toString() || "",
+        salePrice: initialData.sale_price?.toString() || "",
+        initialStock: initialData.initial_stock?.toString() || "0",
+        minStock: initialData.min_stock?.toString() || "0",
+        model: initialData.model || "",
+        color: initialData.color || "",
+        barcode: initialData.barcode || "",
+        dimensions: initialData.dimensions || "",
+        weight: initialData.weight?.toString() || "0",
+        manufactureDate: initialData.manufacture_date || "",
+        expiryDate: initialData.expiry_date || "",
+        description: initialData.description || "",
+        images: initialData.images?.map((img) => img.image_url) || [],
+      });
+      setImageUrls(initialData.images?.map((img) => img.image_url) || []);
     }
   }, [initialData]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newErrors = {};
+
+    // Validações obrigatórias
+    if (!formData.name) newErrors.name = "Nome é obrigatório";
+    if (!formData.brand) newErrors.brand = "Marca é obrigatória";
+    if (!formData.category) newErrors.category = "Categoria é obrigatória";
+    if (!formData.purchasePrice)
+      newErrors.purchasePrice = "Preço de compra é obrigatório";
+    if (!formData.salePrice)
+      newErrors.salePrice = "Preço de venda é obrigatório";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    const processedData = {
+      ...formData,
+      purchasePrice: parseFloat(formData.purchasePrice),
+      salePrice: parseFloat(formData.salePrice),
+      initialStock: parseInt(formData.initialStock),
+      minStock: parseInt(formData.minStock),
+      weight: parseFloat(formData.weight),
+      images: imageUrls,
+    };
+
+    onSubmit(processedData);
   };
 
   const handleSubmit = (e) => {
@@ -153,12 +194,13 @@ const ProductForm = ({ onSubmit, initialData }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium mb-1">Nome</label>
-            <input
-              type="text"
-              name="name"
+            <Input
+              label="Nome"
               value={formData.name}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+              error={errors.name}
               required
             />
           </div>
@@ -169,8 +211,10 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="text"
               name="brand"
               value={formData.brand}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
+              onChange={(e) =>
+                setFormData({ ...formData, brand: e.target.value })
+              }
+              required
             />
           </div>
 
@@ -180,8 +224,10 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="text"
               name="category"
               value={formData.category}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
+              onChange={(e) =>
+                setFormData({ ...formData, category: e.target.value })
+              }
+              required
             />
           </div>
         </div>
@@ -214,7 +260,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="number"
               name="salePrice"
               value={formData.salePrice}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, salePrice: e.target.value })
+              }
               className="w-full p-2 border rounded"
               step="0.01"
               required
@@ -229,7 +277,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="number"
               name="initialStock"
               value={formData.initialStock}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, initialStock: e.target.value })
+              }
               className="w-full p-2 border rounded"
               required
             />
@@ -243,8 +293,11 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="number"
               name="minStock"
               value={formData.minStock}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, minStock: e.target.value })
+              }
               className="w-full p-2 border rounded"
+              required
             />
           </div>
         </div>
@@ -260,7 +313,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="text"
               name="model"
               value={formData.model}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, model: e.target.value })
+              }
               className="w-full p-2 border rounded"
             />
           </div>
@@ -271,7 +326,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="text"
               name="color"
               value={formData.color}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, color: e.target.value })
+              }
               className="w-full p-2 border rounded"
             />
           </div>
@@ -284,7 +341,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="text"
               name="barcode"
               value={formData.barcode}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, barcode: e.target.value })
+              }
               className="w-full p-2 border rounded"
             />
           </div>
@@ -297,7 +356,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="text"
               name="size"
               value={formData.size}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, size: e.target.value })
+              }
               placeholder="00x00x00"
               className="w-full p-2 border rounded"
             />
@@ -309,7 +370,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="text"
               name="weight"
               value={formData.weight}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, weight: e.target.value })
+              }
               className="w-full p-2 border rounded"
             />
           </div>
@@ -328,7 +391,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="date"
               name="manufactureDate"
               value={formData.manufactureDate}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, manufactureDate: e.target.value })
+              }
               className="w-full p-2 border rounded"
             />
           </div>
@@ -341,7 +406,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="date"
               name="expiryDate"
               value={formData.expiryDate}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, expiryDate: e.target.value })
+              }
               className="w-full p-2 border rounded"
             />
           </div>
@@ -354,7 +421,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
         <textarea
           name="description"
           value={formData.description}
-          onChange={handleChange}
+          onChange={(e) =>
+            setFormData({ ...formData, description: e.target.value })
+          }
           className="w-full p-2 border rounded"
           rows="3"
         />

@@ -214,7 +214,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
             <label className="block text-sm font-medium mb-1">
               Preço de Compra
             </label>
-            <input
+            <CurrencyInput
               type="number"
               name="purchasePrice"
               value={formData.purchasePrice}
@@ -231,7 +231,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
             <label className="block text-sm font-medium mb-1">
               Preço de Venda
             </label>
-            <input
+            <CurrencyInput
               type="number"
               name="salePrice"
               value={formData.salePrice}

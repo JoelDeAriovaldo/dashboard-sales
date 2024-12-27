@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { X, Upload } from "lucide-react";
 import Button from "../../components/common/Button";
+import Input from "../../components/common/Input";
 
 const ProductForm = ({ onSubmit, initialData }) => {
   const [formData, setFormData] = useState({
@@ -21,6 +23,36 @@ const ProductForm = ({ onSubmit, initialData }) => {
     description: "",
     images: [],
   });
+
+  ProductForm.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    initialData: PropTypes.shape({
+      name: PropTypes.string,
+      brand: PropTypes.string,
+      category: PropTypes.string,
+      purchase_price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      sale_price: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      initial_stock: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      min_stock: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      model: PropTypes.string,
+      color: PropTypes.string,
+      barcode: PropTypes.string,
+      dimensions: PropTypes.string,
+      weight: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+      manufacture_date: PropTypes.string,
+      expiry_date: PropTypes.string,
+      description: PropTypes.string,
+      images: PropTypes.arrayOf(
+        PropTypes.shape({
+          image_url: PropTypes.string,
+        })
+      ),
+    }),
+  };
+
+  ProductForm.defaultProps = {
+    initialData: null,
+  };
 
   const [errors, setErrors] = useState({});
   const [imagePreviews, setImagePreviews] = useState([]);
@@ -45,7 +77,7 @@ const ProductForm = ({ onSubmit, initialData }) => {
         description: initialData.description || "",
         images: initialData.images?.map((img) => img.image_url) || [],
       });
-      setImageUrls(initialData.images?.map((img) => img.image_url) || []);
+      setImagePreviews(initialData.images?.map((img) => img.image_url) || []);
     }
   }, [initialData]);
 
@@ -54,13 +86,20 @@ const ProductForm = ({ onSubmit, initialData }) => {
     const newErrors = {};
 
     // Validações obrigatórias
-    if (!formData.name) newErrors.name = "Nome é obrigatório";
-    if (!formData.brand) newErrors.brand = "Marca é obrigatória";
-    if (!formData.category) newErrors.category = "Categoria é obrigatória";
-    if (!formData.purchasePrice)
-      newErrors.purchasePrice = "Preço de compra é obrigatório";
-    if (!formData.salePrice)
-      newErrors.salePrice = "Preço de venda é obrigatório";
+    const requiredFields = {
+      name: "Nome é obrigatório",
+      brand: "Marca é obrigatória",
+      category: "Categoria é obrigatória",
+      purchasePrice: "Preço de compra é obrigatório",
+      salePrice: "Preço de venda é obrigatório",
+      initialStock: "Estoque inicial é obrigatório",
+    };
+
+    Object.entries(requiredFields).forEach(([field, message]) => {
+      if (!formData[field]) {
+        newErrors[field] = message;
+      }
+    });
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -74,46 +113,10 @@ const ProductForm = ({ onSubmit, initialData }) => {
       initialStock: parseInt(formData.initialStock),
       minStock: parseInt(formData.minStock),
       weight: parseFloat(formData.weight),
-      images: imageUrls,
+      images: imagePreviews,
     };
 
     onSubmit(processedData);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // Validate form data
-    const requiredFields = [
-      "name",
-      "purchasePrice",
-      "salePrice",
-      "initialStock",
-    ];
-    const missingFields = requiredFields.filter((field) => !formData[field]);
-
-    if (missingFields.length > 0) {
-      alert(
-        `Please fill in the following required fields: ${missingFields.join(
-          ", "
-        )}`
-      );
-      return;
-    }
-
-    // Convert numeric fields to numbers
-    const processedFormData = {
-      ...formData,
-      purchasePrice: parseFloat(formData.purchasePrice),
-      salePrice: parseFloat(formData.salePrice),
-      initialStock: parseInt(formData.initialStock),
-      minStock: parseInt(formData.minStock) || 0,
-    };
-
-    // Call the onSubmit prop function with the processed form data
-    if (onSubmit) {
-      onSubmit(processedFormData);
-    }
   };
 
   const handleImageUpload = (e) => {
@@ -245,7 +248,9 @@ const ProductForm = ({ onSubmit, initialData }) => {
               type="number"
               name="purchasePrice"
               value={formData.purchasePrice}
-              onChange={handleChange}
+              onChange={(e) =>
+                setFormData({ ...formData, purchasePrice: e.target.value })
+              }
               className="w-full p-2 border rounded"
               step="0.01"
               required

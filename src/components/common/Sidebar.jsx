@@ -16,7 +16,11 @@ const Sidebar = ({ isExpanded, toggleSidebar }) => {
   // Não renderizar a sidebar na página de login
   const location = useLocation();
 
-  if (location.pathname === ROUTES.LOGIN) {
+  if (
+    location.pathname === ROUTES.LOGIN ||
+    location.pathname === ROUTES.REGISTER ||
+    location.pathname === ROUTES.SALES.POS
+  ) {
     return null;
   }
   return (

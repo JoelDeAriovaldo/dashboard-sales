@@ -6,33 +6,23 @@ import { useNavigate } from "react-router-dom";
 import Modal from "../../components/common/Modal";
 import CustomerForm from "../crm/CustomerForm";
 import Button from "../../components/common/Button";
+import { useCustomers } from "../../hooks/useCustomers";
+import { customerService } from "../../services/clientes";
 
 const CustomerList = () => {
+  const { customers, loading, error, refetchCustomers } = useCustomers();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [customers, setCustomers] = useState([
-    {
-      id: 1,
-      name: "João Silva",
-      email: "joao.silva@example.com",
-      nuit: "123456789",
-      phone: "123-456-7890",
-      address: "Rua A, 123",
-    },
-    {
-      id: 2,
-      name: "Maria Oliveira",
-      email: "maria.oliveira@example.com",
-      nuit: "123456789",
-      phone: "987-654-3210",
-      address: "Rua B, 456",
-    },
-  ]);
-
   const navigate = useNavigate();
 
-  const handleAddCustomer = (newCustomer) => {
-    setCustomers((prev) => [...prev, { ...newCustomer, id: prev.length + 1 }]);
-    setIsModalOpen(false);
+  const handleAddCustomer = async (newCustomer) => {
+    try {
+      await customerService.create(newCustomer);
+      toast.success("Cliente adicionado com sucesso");
+      refetchCustomers();
+      setIsModalOpen(false);
+    } catch (error) {
+      toast.error("Erro ao adicionar cliente");
+    }
   };
 
   const columns = [

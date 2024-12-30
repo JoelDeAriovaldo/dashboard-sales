@@ -1,257 +1,157 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Line } from "react-chartjs-2";
-import {
-  Edit,
-  Trash,
-  ArrowLeft,
-  Star,
-  Package,
-  DollarSign,
-  Bookmark,
-  BarChart2,
-  ShoppingCart,
-} from "lucide-react";
+import { ArrowLeft, Edit, Trash, Package, Tag, Boxes } from "lucide-react";
 import MainLayout from "../../layouts/MainLayout";
 import Button from "../../components/common/Button";
-import Modal from "../../components/common/Modal";
+import Loader from "../../components/common/Loader";
+import { useProduct } from "../../hooks/useProduct";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  const product = {
-    id: 1,
-    name: "Product Example",
-    description:
-      "Product description here with more detailed information about the features and benefits of this amazing product.",
-    price: 99.99,
-    stock: 50,
-    category: "Category",
-    sku: "SKU123",
-    rating: 4.5,
-    images: [
-      "https://via.placeholder.com/400x400",
-      "https://via.placeholder.com/400x400",
-      "https://via.placeholder.com/400x400",
-    ],
-  };
-
-  const salesData = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-    datasets: [
-      {
-        label: "Sales",
-        data: [12, 19, 3, 5, 2, 3],
-        backgroundColor: "rgba(75,192,192,0.2)",
-        borderColor: "rgba(75,192,192,1)",
-      },
-    ],
-  };
-
-  const relatedProducts = [
-    {
-      id: 1,
-      ProductDetails,
-      name: "Product A",
-      price: 79.99,
-      image: "https://via.placeholder.com/200x200",
-    },
-    {
-      id: 2,
-      name: "Product B",
-      price: 89.99,
-      image: "https://via.placeholder.com/200x200",
-    },
-    {
-      id: 3,
-      name: "Product C",
-      price: 69.99,
-      image: "https://via.placeholder.com/200x200",
-    },
-    {
-      id: 4,
-      name: "Product D",
-      price: 99.99,
-      image: "https://via.placeholder.com/200x200",
-    },
-  ];
+  const { product, loading, error } = useProduct(id);
+  const [activeImage, setActiveImage] = useState(0);
 
   return (
     <MainLayout>
-      <div className="p-6 md:p-8 lg:p-10 animate-fade-in">
-        <div className="glass-morphism rounded-lg overflow-hidden">
-          {/* Header */}
-          <div className="border-b border-gray-200 dark:border-gray-700 p-6">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center space-x-4">
-                <Button
-                  variant="ghost"
-                  onClick={() => navigate("/products")}
-                  className="hover-lift"
-                >
-                  <ArrowLeft className="mr-2" size={20} />
-                  Back to List
-                </Button>
-                <h1 className="text-gradient">{product.name}</h1>
-              </div>
-              <div className="flex space-x-2">
-                <Button variant="secondary" onClick={() => console.log("Edit")}>
-                  <Edit className="mr-1" size={18} />
-                  Edit
-                </Button>
-                <Button
-                  className="btn-primary"
-                  onClick={() => setShowDeleteModal(true)}
-                >
-                  <Trash className="mr-1" size={18} />
-                  Delete
-                </Button>
-              </div>
-            </div>
+      <div className="p-6 md:p-8 lg:p-10 space-y-6 animate-fade-in">
+        {/* Header com Ações */}
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-4">
+            <Button onClick={() => navigate("/products")} variant="ghost">
+              <ArrowLeft className="mr-2" size={20} />
+              Voltar
+            </Button>
+            <h1 className="text-2xl font-bold hidden md:block">
+              {product?.name}
+            </h1>
           </div>
-
-          {/* Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
-            {/* Image Gallery */}
-            <div className="lg:col-span-1">
-              <div className="space-y-4">
-                <img
-                  src={product.images[0]}
-                  alt={product.name}
-                  className="w-full rounded-lg hover-lift"
-                />
-                <div className="grid grid-cols-3 gap-2">
-                  {product.images.slice(1).map((img, idx) => (
-                    <img
-                      key={idx}
-                      src={img}
-                      alt={`${product.name} ${idx + 2}`}
-                      className="w-full rounded-lg hover-lift"
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Product Details */}
-            <div className="lg:col-span-2 space-y-6">
-              <div className="card">
-                <div className="grid grid-cols-2 gap-6">
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <DollarSign className="text-primary" size={20} />
-                      <h3 className="text-sm font-medium">Price</h3>
-                    </div>
-                    <p className="mt-1 text-2xl font-bold text-primary">
-                      R$ {product.price.toFixed(2)}
-                    </p>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <Package className="text-primary" size={20} />
-                      <h3 className="text-sm font-medium">Stock</h3>
-                    </div>
-                    <p className="mt-1 text-xl font-semibold">
-                      {product.stock} units
-                    </p>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <Bookmark className="text-primary" size={20} />
-                      <h3 className="text-sm font-medium">Category</h3>
-                    </div>
-                    <p className="mt-1">{product.category}</p>
-                  </div>
-
-                  <div>
-                    <div className="flex items-center space-x-2">
-                      <Star className="text-primary" size={20} />
-                      <h3 className="text-sm font-medium">Rating</h3>
-                    </div>
-                    <p className="mt-1 font-semibold">{product.rating} / 5.0</p>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <h3 className="text-sm font-medium mb-2">Description</h3>
-                  <p className="read-the-docs">{product.description}</p>
-                </div>
-              </div>
-
-              {/* Sales Chart */}
-              <div className="card">
-                <div className="flex items-center space-x-2 mb-4">
-                  <BarChart2 className="text-primary" size={24} />
-                  <h2>Sales Performance</h2>
-                </div>
-                <Line
-                  data={salesData}
-                  options={{
-                    responsive: true,
-                    plugins: {
-                      legend: {
-                        position: "top",
-                      },
-                    },
-                  }}
-                />
-              </div>
-            </div>
+          <div className="flex space-x-2">
+            <Button
+              variant="outline"
+              onClick={() => navigate(`/products/edit/${id}`)}
+            >
+              <Edit size={18} className="mr-2" />
+              Editar
+            </Button>
+            <Button variant="danger">
+              <Trash size={18} className="mr-2" />
+              Excluir
+            </Button>
           </div>
+        </div>
 
-          {/* Related Products */}
-          <div className="border-t border-gray-200 dark:border-gray-700 p-6">
-            <h2 className="mb-4">Related Products</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {relatedProducts.map((product) => (
-                <div key={product.id} className="card hover-lift">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Galeria de Imagens */}
+          <div className="lg:col-span-5 space-y-4">
+            <div className="aspect-square rounded-xl overflow-hidden bg-gray-100 shadow-lg">
+              <img
+                src={
+                  product?.images?.[activeImage]?.image_url ||
+                  "https://via.placeholder.com/400"
+                }
+                alt={product?.name}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div className="grid grid-cols-5 gap-2">
+              {product?.images?.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveImage(idx)}
+                  className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                    activeImage === idx
+                      ? "border-blue-500 ring-2 ring-blue-500/50"
+                      : "border-transparent"
+                  }`}
+                >
                   <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-40 object-cover rounded-md mb-3"
+                    src={img.image_url}
+                    alt={`${product.name} ${idx + 1}`}
+                    className="w-full h-full object-cover"
                   />
-                  <h4 className="font-medium">{product.name}</h4>
-                  <p className="text-primary font-semibold">
-                    R$ {product.price.toFixed(2)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Informações do Produto */}
+          <div className="lg:col-span-7 space-y-6">
+            <h1 className="text-3xl font-bold md:hidden">{product?.name}</h1>
+
+            {/* Cards de Informações */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="glass-morphism p-4 rounded-xl">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Tag className="text-blue-500" />
+                  <h3 className="font-semibold">Preço</h3>
+                </div>
+                <p className="text-2xl font-bold text-blue-600">
+                  R$ {parseFloat(product?.sale_price).toFixed(2)}
+                </p>
+                <p className="text-sm text-gray-500">
+                  Compra: R$ {parseFloat(product?.purchase_price).toFixed(2)}
+                </p>
+              </div>
+
+              <div className="glass-morphism p-4 rounded-xl">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Boxes className="text-green-500" />
+                  <h3 className="font-semibold">Estoque</h3>
+                </div>
+                <p className="text-2xl font-bold text-green-600">
+                  {product?.initial_stock} un
+                </p>
+                <p className="text-sm text-gray-500">
+                  Mínimo: {product?.min_stock} un
+                </p>
+              </div>
+
+              <div className="glass-morphism p-4 rounded-xl">
+                <div className="flex items-center space-x-2 mb-2">
+                  <Package className="text-purple-500" />
+                  <h3 className="font-semibold">Categoria</h3>
+                </div>
+                <p className="text-lg font-semibold">{product?.category}</p>
+                <p className="text-sm text-gray-500">{product?.brand}</p>
+              </div>
+            </div>
+
+            {/* Especificações */}
+            <div className="glass-morphism p-6 rounded-xl space-y-4">
+              <h2 className="text-xl font-semibold">Especificações</h2>
+              <div className="grid grid-cols-2 gap-y-4">
+                <div>
+                  <p className="text-sm text-gray-500">Modelo</p>
+                  <p className="font-medium">{product?.model || "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Cor</p>
+                  <p className="font-medium">{product?.color || "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Dimensões</p>
+                  <p className="font-medium">{product?.dimensions || "N/A"}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Peso</p>
+                  <p className="font-medium">
+                    {product?.weight ? `${product.weight}kg` : "N/A"}
                   </p>
                 </div>
-              ))}
+              </div>
+            </div>
+
+            {/* Descrição */}
+            <div className="glass-morphism p-6 rounded-xl">
+              <h2 className="text-xl font-semibold mb-3">Descrição</h2>
+              <p className="text-gray-700 whitespace-pre-line">
+                {product?.description || "Sem descrição disponível"}
+              </p>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Delete Confirmation Modal */}
-      <Modal isOpen={showDeleteModal} onClose={() => setShowDeleteModal(false)}>
-        <div className="p-6">
-          <h2 className="mb-4">Confirm Deletion</h2>
-          <p className="read-the-docs mb-6">
-            Are you sure you want to delete this product? This action cannot be
-            undone.
-          </p>
-          <div className="flex justify-end space-x-2">
-            <Button
-              variant="secondary"
-              onClick={() => setShowDeleteModal(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              className="btn-primary"
-              onClick={() => {
-                console.log("Delete confirmed");
-                setShowDeleteModal(false);
-              }}
-            >
-              Delete
-            </Button>
-          </div>
-        </div>
-      </Modal>
     </MainLayout>
   );
 };
